@@ -37,13 +37,24 @@ def manageClients(cliSec, numT):
     numT[1] = 0
 
 def reporter(numT, rr):
+    outFileT = open("resultThreads.csv", "w")
+    outFileD = open("resultData.csv", "w")
+    count = 1
     while numT[1] == 1 or numT[0] > 0:
         time.sleep(rr)
-        out = check_output(['du','-h','files'])
-        print "========================"
-        print ">Data: "+out
-        print ">N. Threads: %s" % numT[0]
-        print "========================"
+        out = check_output(['du','-h','files']).split("\t")
+        printInfo(out[0],numT[0])
+        outFile.write(count + "," + numT[0])
+        outFile.write(count + "," + out[0])
+        count += 1
+
+def printInfo(data, num):
+    print "========================"
+    print ">Data:\t" + data + " KB"
+    print ">N. Threads:\t%s" % num
+    print "========================"
+
+# Main
 
 manager = threading.Thread(target=manageClients, args=(clientSec,numThreads,))
 report  = threading.Thread(target=reporter, args=(numThreads,reportTime,))
