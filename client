@@ -4,9 +4,14 @@ import threading
 from subprocess import call, check_output
 from random import randint
 
+# Configs Client
 ip = "192.168.152.140"
+timeWaiting = 20    #seconds
+clientSec = 2       #seconds
+reportTime = 1      #seconds
 
-numThreads = [0,1]
+# Script
+numThreads = [0,1]  #[0]: numThreads | [1]: Flag On(1)/Off(0)
 lock = threading.RLock()
 
 def client(num):
@@ -32,14 +37,15 @@ def manageClients(cliSec, numT):
     numT[1] = 0
 
 def reporter(numT, rr):
-    #for i in range(20):
     while numT[1] == 1 or numT[0] > 0:
         time.sleep(rr)
         out = check_output(['du','-h','files'])
-        print "Data: "+out
-        print "N- Threads: %s" % numT[0]
+        print "========================"
+        print ">Data: "+out
+        print ">N. Threads: %s" % numT[0]
+        print "========================"
 
-manager = threading.Thread(target=manageClients, args=(8,numThreads,))
-report  = threading.Thread(target=reporter, args=(numThreads,1,))
+manager = threading.Thread(target=manageClients, args=(clientSec,numThreads,))
+report  = threading.Thread(target=reporter, args=(numThreads,reportTime,))
 manager.start()
 report.start()

@@ -1,20 +1,11 @@
-#! /usr/bin/python 
-"""
-Send a GET request::
-    curl http://localhost
-
-Send a HEAD request::
-    curl -I http://localhost
-
-Send a POST request::
-    curl -d "foo=bar&bin=baz" http://localhost
-"""
-
+#! /usr/bin/python
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from subprocess import call
 from random import randint
 import time
 import SocketServer
+
+# Process all requests
 
 class S(BaseHTTPRequestHandler):
     def _set_headers(self):
@@ -26,8 +17,8 @@ class S(BaseHTTPRequestHandler):
 	list=["512K","1M","2M","4M","16M","32M","64M"]
         self._set_headers()
 	i = randint(1, 7)
-	filename = "file_"+str(time.time()) 
-	call(["dd","if=/dev/urandom","of="+filename,"bs="+list[i],"count=1"]) 
+	filename = "file_"+str(time.time())
+	call(["dd","if=/dev/urandom","of="+filename,"bs="+list[i],"count=1"])
 	f = open(filename, 'rb')
 	while True:
 		data = f.read(4096)
@@ -39,12 +30,15 @@ class S(BaseHTTPRequestHandler):
 
     def do_HEAD(self):
         self._set_headers()
-        
+
     def do_POST(self):
-        # Doesn't do anything with posted data
+        # not use
         self._set_headers()
         self.wfile.write("<html><body><h1>POST!</h1></body></html>")
-        
+
+
+# Start the Server
+
 def run(server_class=HTTPServer, handler_class=S, port=80):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
