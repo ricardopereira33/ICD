@@ -42,10 +42,10 @@ def reporter(numT, rr):
     count = 1
     while numT[1] == 1 or numT[0] > 0:
         time.sleep(rr)
-        out = check_output(['du','-h','files']).split("\t")
+        out = check_output(['du','-h',"-k",'files']).split("\t")
         printInfo(out[0],numT[0])
-        outFile.write(count + "," + numT[0])
-        outFile.write(count + "," + out[0])
+        outFileT.write(str(count) + "," + str(numT[0]) + "\n")
+        outFileD.write(str(count) + "," + str(out[0]) + "\n")
         count += 1
 
 def printInfo(data, num):
