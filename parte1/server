@@ -14,7 +14,7 @@ class S(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-	list=["512K","1M","2M","4M","16M","32M","64M"]
+	list=["512K","1M","2M","4M","16M"]
         self._set_headers()
 	i = randint(1, 7)
 	filename = "file_"+str(time.time())

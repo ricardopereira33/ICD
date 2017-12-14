@@ -1,14 +1,15 @@
 #! /usr/bin/python
 import time
 import threading
+import sys
 from subprocess import call, check_output
 from random import randint
 
 # Configs Client
 ip = "192.168.152.140"
-timeWaiting = 20    #seconds
-clientSec = 2       #seconds
-reportTime = 1      #seconds
+timeWaiting = 20                #seconds
+clientSec = int(sys.argv[1])    #seconds
+reportTime = 1                  #seconds
 
 # Script
 numThreads = [0,1]  #[0]: numThreads | [1]: Flag On(1)/Off(0)
@@ -37,8 +38,10 @@ def manageClients(cliSec, numT):
     numT[1] = 0
 
 def reporter(numT, rr):
-    outFileT = open("resultThreads.csv", "w")
-    outFileD = open("resultData.csv", "w")
+    outFileT = open("resultThreads_"+str(clientSec)+".csv", "w")
+    outFileD = open("resultData_"+str(clientSec)+".csv", "w")
+    outFileT.write("Time,Threads\n")
+    outFileD.write("Time,Data\n")
     count = 1
     while numT[1] == 1 or numT[0] > 0:
         time.sleep(rr)
@@ -55,7 +58,6 @@ def printInfo(data, num):
     print "========================"
 
 # Main
-
 manager = threading.Thread(target=manageClients, args=(clientSec,numThreads,))
 report  = threading.Thread(target=reporter, args=(numThreads,reportTime,))
 manager.start()
